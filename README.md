@@ -9,6 +9,6 @@ pip install -r requirements.txt
 run upload_gcs.py
 
 ### custom
-cv2.VideoCapture(<number or http path>)
+cv2.VideoCapture(your device number or http path)
 
-video length (while end - start < 10 --> 영상 10초)
+video length (while end - start < 10: --> 영상 10초)
