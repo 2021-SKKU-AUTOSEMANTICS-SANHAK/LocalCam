@@ -6,7 +6,7 @@ push local camera stream to GCP storage
 pip install -r requirements.txt
 
 ### execute
-run upload_gcs.py
+python main.py
 
 ### custom
 cv2.VideoCapture(your device number or http path)
