@@ -1,0 +1,10 @@
+{
+  "sources": [0, "http://192.168.35.226:4747/video"],
+  "frame_skip": 4,
+  "video_length": 10,
+  "how_many": 1,
+  "credential_path": "atsm-202107-50b0c3dc3869.json",
+  "project_id": "atsm-202107",
+  "bucket_id": "sanhak_2021",
+  "dataset_id": "sanhak_2021"
+}
