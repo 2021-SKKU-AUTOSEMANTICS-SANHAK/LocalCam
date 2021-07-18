@@ -15,7 +15,7 @@ def receive_send(args):
     gcs_dir = list()
     cap = list()
     fps = list()
-    out = list()
+    out = [None, None]
     blob = list()
     cam_num = len(sources)
     fourcc = cv2.VideoWriter_fourcc(*'DIVX')
@@ -56,7 +56,7 @@ def receive_send(args):
         now = time.localtime()
         date_time = time.strftime('%Y-%m-%d_%H-%M-%S', now)
         for i in range(cam_num):
-            out.append(cv2.VideoWriter(
+            out[i] = (cv2.VideoWriter(
                 './videos/{}'.format(date_time + '_{}.avi'.format(i)), fourcc, fps[i], (w, h)))
 
         start = time.time()
@@ -75,16 +75,18 @@ def receive_send(args):
                         out[i].write(im)
                     else:
                         break   # 한번에 처리안해서 data 꼬일 수 있음
-                print(round(end - start))
+                print(int(end - start))
             cv2.waitKey(25)  # wait time
             end = time.time()
 
+        for i in out:
+            i.release()
+
         for i in range(cam_num):
-            out[i].release()
             blob = bucket.blob(gcs_dir[i] + '/' + date_time + '_' + str(i))
             blob.upload_from_filename('./videos/{}'.format(date_time + '_{}.avi'.format(i)))
-            blob.make_public()
-            vid_path = 'https://storage.googleapis.com/{}/{}/'.format(bucket_id, gcs_dir[i]) + date_time + '_0'
+            # blob.make_public()
+            vid_path = 'https://storage.googleapis.com/{}/{}/'.format(bucket_id, gcs_dir[i]) + date_time + '_' + str(i)
             query = (
                 "INSERT INTO `{}.{}.{}` VALUES({}, '{}', '{}')".format(project_id, dataset_id, table_id, str(i), date_time,
                                                                        vid_path))
@@ -92,6 +94,7 @@ def receive_send(args):
             results = query_job.result()
         iter_num += 1
         print(str(iter_num) + 'nd upload succeed')
+        print(time.time() - end)
 
     for i in cap:
         i.release()
